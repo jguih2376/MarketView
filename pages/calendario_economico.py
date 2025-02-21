@@ -4,10 +4,6 @@ import streamlit.components.v1 as components
 
 
 def app():
-    st.title("Calendário Econômico")
-    st.write("Aqui estão os eventos econômicos importantes.")
-    # Adicione seu código para exibir o conteúdo do Calendário Econômico aqui.
-
     # Título da página
     st.title("📅 Calendário Econômico")
     

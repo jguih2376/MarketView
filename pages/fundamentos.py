@@ -1,8 +1,8 @@
 import streamlit as st
-import yfinance as yf
 import pandas as pd
-import matplotlib.pyplot as plt
+import yfinance as yf
 import fundamentus as fd
+import plotly.graph_objects as go
 
 
 # Função para obter detalhes do papel com cache
@@ -121,7 +121,7 @@ def app():
    
 
     # Título do app para gráfico
-    st.title('Evolução histórica')
+    st.subheader('Evolução histórica')
 
     # Opção para incluir IBOVESPA
     incluir_ibov = st.checkbox('Incluir IBOVESPA (IBOV)')
@@ -140,33 +140,56 @@ def app():
     with col3:
         inicio = st.date_input('Data de Início', value=pd.to_datetime('2010-01-01'), format="DD/MM/YYYY")
     with col4:
-        fim = st.date_input('Data de Fim', value=pd.to_datetime('2025-02-01'), format="DD/MM/YYYY")
+        fim = st.date_input('Data de Fim', value='today', format="DD/MM/YYYY")
 
     # Baixar os dados e gerar o gráfico quando o botão for pressionado
     if st.button('Gerar gráfico'):
         try:
             # Baixar os dados históricos
             dados = yf.download(ativos, start=inicio, end=fim)['Close']
-            
+
             # Verificar se os dados foram baixados corretamente
             if dados.empty:
                 st.error(f'Nenhum dado foi encontrado para os ativos: {ativos} no intervalo de datas selecionado.')
             else:
                 # Calcular a variação percentual acumulada
                 dados_pct_acumulado = (dados / dados.iloc[0] - 1) * 100
-                plt.figure(figsize=(10, 6))
+                
+                # Criando gráfico interativo com Plotly
+                fig = go.Figure()
                 for ativo in ativos:
-                    if ativo in dados.columns:
-                        plt.plot(dados_pct_acumulado.index, dados_pct_acumulado[ativo], label=f'{ativo}')
+                    if ativo in dados_pct_acumulado.columns:
+                        fig.add_trace(go.Scatter(
+                            x=dados_pct_acumulado.index, 
+                            y=dados_pct_acumulado[ativo], 
+                            mode='lines',
+                            name=ativo,
+                            line=dict(width=1)  # Definindo a largura da linha como 1 (linha fina)
+                        ))
 
-                plt.title('Histórico de Variação Percentual Acumulada dos Preços de Ativos')
-                plt.xlabel('Data')
-                plt.ylabel('Variação Percentual Acumulada (%)')
-                plt.legend()
-                plt.grid(True)
-                plt.tight_layout()
+                        # Adicionando anotação para destacar o valor atual de cada ativo
+                        fig.add_annotation(
+                            x=dados_pct_acumulado.index[-1], 
+                            y=dados_pct_acumulado[ativo].iloc[-1], 
+                            text=f'{dados_pct_acumulado[ativo].iloc[-1]:.2f}%',
+                            showarrow=True,
+                            arrowhead=0,
+                            ax=40,
+                            ay=-40,
+                            bordercolor='yellow'
+                        )
+                fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
+                fig.update_layout(
+                    title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
+                    xaxis_title='Data',
+                    yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
+                    yaxis2=dict(title='Variação Percentual Acumulada (%)', overlaying='y', side='left', showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot', zeroline=False),
+                    legend_title='Ativos',
+                    plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
+                    xaxis=dict(showgrid=False)
+                )
 
-                st.pyplot(plt)
+                st.plotly_chart(fig)
 
         except Exception as e:
             st.error(f'Ocorreu um erro: {e}')

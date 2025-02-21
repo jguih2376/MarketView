@@ -3,13 +3,13 @@ import pandas as pd
 import yfinance as yf
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import plotly.graph_objects as go
 
 def app():
-    st.title("Retorno Mensal")
-    st.write("Análise de retorno mensal.")
-    st.title('Retorno Mensal')
+    st.title("Análise Histórica")
+    st.write("Análise de retorno mensal e desempenho relativo.")
 
+    st.subheader("Retorno Mensal")
     with st.expander('Escolha', expanded=True):
         opcao = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
 
@@ -130,35 +130,70 @@ def app():
  
         st.pyplot(fig)
 
-    # Título do app para gráfico
-    st.subheader(f'Evolução do Preço - {escolha}')
+#_______________________________________________________________________________
+    st.markdown('---')
+    # Função para carregar os dados usando yfinance
+    @st.cache_data
+    def carregar_dados(tickers, data_inicio, data_fim):
+        # Função para carregar os dados usando yfinance
+        dados = {}
+        for ticker in tickers:
+            hist = yf.Ticker(ticker + '.SA').history(start=data_inicio, end=data_fim)['Close']
+            dados[ticker] = hist
+        return pd.DataFrame(dados)
 
-    # Entrada de datas
-    inicio = st.date_input('Data de Início', value=pd.to_datetime('2010-01-01'), format="DD/MM/YYYY")
-    fim = st.date_input('Data de Fim', value=pd.to_datetime('2025-02-01'), format="DD/MM/YYYY")
+    def calcular_performance(dados):
+        # Função para calcular a performance em percentual
+        if not dados.empty:
+            return (dados / dados.iloc[0] - 1) * 100
+        return dados
 
-    # Baixar os dados e gerar o gráfico quando o botão for pressionado
-    if st.button('Gerar gráfico de Preço'):
-        try:
-            # Baixar os dados históricos
-            dados = yf.download(ticker, start=inicio, end=fim)['Close']
+    def criar_grafico(ativos_selecionados, dados):
+        # Função para criar o gráfico
+        fig = go.Figure()
+        for ativo in ativos_selecionados:
+            fig.add_trace(go.Scatter(
+                x=dados.index,
+                y=dados[ativo],
+                name=ativo,
+                line=dict(width=1)
+            ))
 
-            # Verificar se os dados foram baixados corretamente
-            if dados.empty:
-                st.error(f'Nenhum dado foi encontrado para o ativo {escolha} no intervalo de datas selecionado.')
-            else:
-                # Criar o gráfico de preço
-                fig, ax = plt.subplots(figsize=(10, 6))
-                ax.plot(dados.index, dados, label=f'Preço de {escolha}', color='b')
+        fig.update_layout(
+            title='Desempenho Relativo dos Ativos (%)',
+            xaxis_title='Data',
+            yaxis_title='Performance (%)',
+            xaxis=dict(tickformat='%m/%Y'),
+            legend_title='Ativo',
+            legend_orientation='h',
+            plot_bgcolor='rgba(211, 211, 211, 0.15)'  # Cor de fundo cinza claro   
+        )
+        fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
 
-                ax.set_title(f'Histórico de Preço - {escolha}')
-                ax.set_xlabel('Data')
-                ax.set_ylabel('Preço (R$ ou USD)')
-                ax.legend()
-                ax.grid(True)
-                plt.xticks(rotation=45)
+        return fig
 
-                st.pyplot(fig)
+    st.subheader('Desempenho Relativo')
 
-        except Exception as e:
-            st.error(f'Ocorreu um erro: {e}')
+    # Seleção de datas
+    data_inicio = st.date_input('Data de início', pd.to_datetime('2015-01-01').date(), format='DD/MM/YYYY')
+    data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+
+    # Lista predefinida de tickers (ações brasileiras)
+    tickers = ['PETR4', 'VALE3', 'ITUB4', 'BBAS3', 'ABEV3', 'WEGE3', 'RENT3', 'JBSS3', 'ELET3']
+
+    # Carregar os dados
+    dados = carregar_dados(tickers, data_inicio, data_fim)
+
+    # Verificar se há dados carregados antes de calcular a performance
+    if not dados.empty:
+        dados = calcular_performance(dados)
+
+    # Criação do componente multiselect
+    ativos_selecionados = st.multiselect('Selecione:', options=tickers, placeholder="Ativos")
+
+    # Exibir o gráfico
+    if ativos_selecionados:
+        fig = criar_grafico(ativos_selecionados, dados)
+        st.plotly_chart(fig)
+    else:
+        st.write('Selecione pelo menos um ativo.')
