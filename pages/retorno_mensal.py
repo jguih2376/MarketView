@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 def app():
-    st.write('Análise Histórica')
+    st.title('Análise Histórica')
     st.subheader('Retorno Mensal')
    
 
@@ -14,7 +14,7 @@ def app():
 
     # Formulário principal
     with st.form(key='form_ativo'):
-        opcao = st.radio('Selecione:', ['Índices', 'Ações', 'Commodities'])
+        opcao = st.radio('', ['Índices', 'Ações', 'Commodities'])
 
         if opcao == 'Índices':
             indices = {'IBOV': '^BVSP',
@@ -27,7 +27,7 @@ def app():
                     'Nikkei225':'^N225',
                     'Merval':'^MERV'}
             
-            escolha = st.selectbox('Selecione o Índice', list(indices.keys()))
+            escolha = st.selectbox('Selecione o Ativo:', list(indices.keys()))
             analisar = st.form_submit_button('Analisar')
             ticker = indices[escolha]
 
@@ -36,13 +36,21 @@ def app():
                         'Prata': 'SI=F',
                         'Platinum': 'PL=F',     
                         'Cobre': 'HG=F',
+                        
                         'WTI Oil':'CL=F',
                         'Brent Oil':'BZ=F',
+                        'Gasolina':'RB=F',
+                        'Gás Natural':'NG=F',
+                        
+                        'Gado Vivo':'LE=F',
+                        'Porcos Magros':'LE=F',
+
                         'Milho':'ZC=F',
                         'Soja':'ZS=F',
+                        'Cacau':'CC=F',
                         'Café':'KC=F'}    
             
-            escolha = st.selectbox('Selecione a Commodity', list(commodities.keys()))
+            escolha = st.selectbox('Selecione o Ativo:', list(commodities.keys()))
             analisar = st.form_submit_button('Analisar')
             ticker = commodities[escolha]
 
@@ -59,7 +67,7 @@ def app():
             # Criando um dicionário com chave como o nome da ação e valor como o nome da ação com '.SA'
             acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-            escolha = st.selectbox('Selecione a Ação', list(acoes_dict.keys()))
+            escolha = st.selectbox('Selecione o Ativo:', list(acoes_dict.keys()))
             analisar = st.form_submit_button('Analisar')
             ticker = acoes_dict[escolha]
             if analisar:
@@ -193,13 +201,28 @@ def app():
     st.subheader('Desempenho Relativo')
 
     with st.form(key='formulario_dados'):
-        opcao1 = st.selectbox('Selecione', ['Índices', 'Ações', 'Commodities'])
+        opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
 
         indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
                 'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
 
-        commodities = {'Ouro': 'GC=F', 'Prata': 'SI=F', 'Platina': 'PL=F', 'Cobre': 'HG=F', 'WTI Oil': 'CL=F', 
-                    'Brent Oil': 'BZ=F', 'Milho': 'ZC=F', 'Soja': 'ZS=F', 'Café': 'KC=F'}
+        commodities = {'Ouro': 'GC=F',
+                        'Prata': 'SI=F',
+                        'Platinum': 'PL=F',     
+                        'Cobre': 'HG=F',
+                        
+                        'WTI Oil':'CL=F',
+                        'Brent Oil':'BZ=F',
+                        'Gasolina':'RB=F',
+                        'Gás Natural':'NG=F',
+                        
+                        'Gado Vivo':'LE=F',
+                        'Porcos Magros':'LE=F',
+
+                        'Milho':'ZC=F',
+                        'Soja':'ZS=F',
+                        'Cacau':'CC=F',
+                        'Café':'KC=F'}    
 
         acoes = ["PETR4", "VALE3","ITUB4", "BBAS3", "BBDC4",
                 "RAIZ4","PRIO3", "VBBR3", "CSAN3", "UGPA3",  
@@ -215,17 +238,17 @@ def app():
         col1, col2, col3 = st.columns([3, 1, 1])
 
         with col1:
-            if opcao1 == 'Índices':
+            if opcao1 == '':
                 escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
                 ticker = [indices[indice] for indice in escolha]
                 legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
-            elif opcao1 == 'Commodities':
+            elif opcao1 == '':
                 escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
                 ticker = [commodities[commodity] for commodity in escolha]
                 legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
-            elif opcao1 == 'Ações':
+            elif opcao1 == '':
                 escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
                 ticker = [acoes_dict[acao] for acao in escolha]
                 legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
