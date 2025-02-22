@@ -203,6 +203,7 @@ def app():
                 legend=dict(
                     orientation='h',  # Coloca a legenda de forma horizontal
 
+                    y=-0.5,  # Define a posição vertical abaixo do gráfico
                     yanchor='bottom',  # Anexa a legenda na parte inferior
                 )
             )
