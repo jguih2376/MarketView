@@ -133,7 +133,7 @@ def app():
 
 #________________________________________________________________________________________________________________________________________________________
 # Título da página
-    st.title("📊 Desempenho Relativo dos Ativos")
+    st.subheader("📊 Desempenho Relativo dos Ativos")
 
     # Função para carregar os dados usando yfinance
     @st.cache_data(ttl=600)  # Cache atualizado a cada 10 min
@@ -214,7 +214,7 @@ def app():
     acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
     # Layout para selecionar os ativos e definir o período dentro do expander
-    with st.expander('Selecione os Ativos e o Período', expanded=True):
+    with st.expander('...', expanded=True):
         # Seleção de opções
         opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
         col1, col2, col3 = st.columns([3, 1, 1])
@@ -227,12 +227,12 @@ def app():
                 legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
             elif opcao1 == 'Commodities':
-                escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
+                escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
                 ticker = [commodities[commodity] for commodity in escolha]
                 legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
             elif opcao1 == 'Ações':
-                escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
+                escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
                 ticker = [acoes_dict[acao] for acao in escolha]
                 legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
