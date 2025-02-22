@@ -154,42 +154,60 @@ def app():
             else:
                 # Calcular a variação percentual acumulada
                 dados_pct_acumulado = (dados / dados.iloc[0] - 1) * 100
-                
+
                 # Criando gráfico interativo com Plotly
                 fig = go.Figure()
+
                 for ativo in ativos:
                     if ativo in dados_pct_acumulado.columns:
                         fig.add_trace(go.Scatter(
-                            x=dados_pct_acumulado.index, 
-                            y=dados_pct_acumulado[ativo], 
+                            x=dados_pct_acumulado.index,
+                            y=dados_pct_acumulado[ativo],
                             mode='lines',
                             name=ativo,
                             line=dict(width=1)  # Definindo a largura da linha como 1 (linha fina)
+                        ))
+
+                        # Adicionando bolinha no último ponto
+                        fig.add_trace(go.Scatter(
+                            x=[dados_pct_acumulado.index[-1]],  # Último ponto do gráfico
+                            y=[dados_pct_acumulado[ativo].iloc[-1]],  # Último valor
+                            mode='markers',
+                            marker=dict(size=5, color='red', symbol='circle'),
+                            name=f'{ativo} - Último Preço',
+                            showlegend=False
                         ))
 
                         # Adicionando anotação para destacar o valor atual de cada ativo
                         fig.add_annotation(
                             x=dados_pct_acumulado.index[-1], 
                             y=dados_pct_acumulado[ativo].iloc[-1], 
-                            text=f'{dados_pct_acumulado[ativo].iloc[-1]:.2f}%',
+                            text=f'{dados_pct_acumulado[ativo].iloc[-1]:.2f}%', 
                             showarrow=True,
                             arrowhead=0,
                             ax=40,
                             ay=-40,
                             bordercolor='yellow'
                         )
+
+                # Ajustando a aparência do gráfico
                 fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
                 fig.update_layout(
                     title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
                     xaxis_title='Data',
                     yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
-                    yaxis2=dict(title='Variação Percentual Acumulada (%)', overlaying='y', side='left', showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot', zeroline=False),
                     legend_title='Ativos',
                     plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
-                    xaxis=dict(showgrid=False)
+                    xaxis=dict(showgrid=False),
+                    height=600,
                 )
 
                 st.plotly_chart(fig)
 
         except Exception as e:
             st.error(f'Ocorreu um erro: {e}')
+
+
+
+
+                            
