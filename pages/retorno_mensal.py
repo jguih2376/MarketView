@@ -9,7 +9,7 @@ def app():
     st.write('Análise Histórica')
     st.subheader('Retorno Mensal')
     with st.expander('...', expanded=True):
-        opcao = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
+        opcao = st.radio('Selecione:', ['Índices', 'Ações', 'Commodities'])
 
         if opcao == 'Índices':
             indices = {'IBOV': '^BVSP',
@@ -185,7 +185,7 @@ def app():
 
     st.subheader('Desempenho Relativo')
 
-    opcao1 = st.selectbox('Selecione', ['Índices', 'Ações', 'Commodities'])
+    opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
 
     indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
             'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
@@ -208,17 +208,17 @@ def app():
 
     with col1:
         if opcao1 == 'Índices':
-            escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
+            escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
             ticker = [indices[indice] for indice in escolha]
             legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
         elif opcao1 == 'Commodities':
-            escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
+            escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
             ticker = [commodities[commodity] for commodity in escolha]
             legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
         elif opcao1 == 'Ações':
-            escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
+            escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
             ticker = [acoes_dict[acao] for acao in escolha]
             legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
