@@ -158,7 +158,7 @@ def app():
 
     st.subheader('Desempenho Relativo')
 
-    opcao = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
+    opcao1 = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
 
     indices = {'IBOV': '^BVSP', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
             'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
@@ -179,15 +179,15 @@ def app():
     col1,col2,col3=st.columns([4,1,1])
 
     with col1:
-        if opcao == 'Índices':
+        if opcao1 == 'Índices':
             escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
             ticker = [indices[indice] for indice in escolha]
 
-        elif opcao == 'Commodities':
+        elif opcao1 == 'Commodities':
             escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
             ticker = [commodities[commodity] for commodity in escolha]
 
-        elif opcao == 'Ações':
+        elif opcao1 == 'Ações':
             escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
             ticker = [acoes_dict[acao] for acao in escolha]
 
