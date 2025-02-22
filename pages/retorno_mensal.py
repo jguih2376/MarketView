@@ -132,19 +132,20 @@ def app():
                 st.error("Erro ao buscar os dados. Verifique o ticker ou tente novamente mais tarde.")
 
 #________________________________________________________________________________________________________________________________________________________
-    st.markdown('---')
+# Título da página
+    st.title("📊 Desempenho Relativo dos Ativos")
 
     # Função para carregar os dados usando yfinance
     @st.cache_data(ttl=600)  # Cache atualizado a cada 10 min
     def carregar_dados(tickers, data_inicio, data_fim):
         if not tickers:
             return pd.DataFrame()
-        
+
         dados = {}
         for ticker in tickers:
             hist = yf.Ticker(ticker).history(start=data_inicio, end=data_fim)['Close']
             dados[ticker] = hist
-        
+
         return pd.DataFrame(dados).dropna()  # Remove valores NaN
 
     def calcular_performance(dados):
@@ -158,7 +159,7 @@ def app():
             nome_ativo = legenda_dict.get(ativo, ativo)  # Usa a chave do dicionário para o nome
             # Dados normalizados ou brutos
             y_data = calcular_performance(dados)[ativo] if normalizado else dados[ativo]
-            
+
             # Adicionando linha do gráfico
             fig.add_trace(go.Scatter(
                 x=dados.index,
@@ -167,7 +168,7 @@ def app():
                 mode='lines',  # Apenas a linha
                 line=dict(width=1)
             ))
-            
+
             # Adicionando bolinha no último ponto
             fig.add_trace(go.Scatter(
                 x=[dados.index[-1]],  # Último ponto do gráfico
@@ -198,44 +199,26 @@ def app():
 
         return fig
 
-    st.subheader('Desempenho Relativo')
+    # Opções de seleção para ativos
+    indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI',
+            'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
 
-    with st.form(key='formulario_dados'):
-        opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
+    commodities = {'Ouro': 'GC=F', 'Prata': 'SI=F', 'Platinum': 'PL=F', 'Cobre': 'HG=F', 'WTI Oil':'CL=F', 'Brent Oil':'BZ=F',
+                'Gasolina':'RB=F', 'Gás Natural':'NG=F', 'Gado Vivo':'LE=F', 'Porcos Magros':'LE=F', 'Milho':'ZC=F',
+                'Soja':'ZS=F', 'Cacau':'CC=F', 'Café':'KC=F'}
 
-        indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
-                'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
+    acoes = ["PETR4", "VALE3","ITUB4", "BBAS3", "BBDC4", "RAIZ4","PRIO3", "VBBR3", "CSAN3", "UGPA3", "BPAC11", "SANB11",
+            "GGBR4", "CSNA3", "USIM5", "JBSS3", "ABEV3", "MRFG3", "BRFS3", "BEEF3", "ELET3", "NEOE3", "CPFE3", "ENGI11",
+            "EQTL3", "SUZB3", "KLBN11", "DTEX3", "RANI3", "MRFG3", "CYRE3", "MRVE3", "EZTC3", "CVCB3", "TRIS3", "WEGE3", "B3SA3"]
 
-        commodities = {'Ouro': 'GC=F',
-                        'Prata': 'SI=F',
-                        'Platinum': 'PL=F',     
-                        'Cobre': 'HG=F',
-                        
-                        'WTI Oil':'CL=F',
-                        'Brent Oil':'BZ=F',
-                        'Gasolina':'RB=F',
-                        'Gás Natural':'NG=F',
-                        
-                        'Gado Vivo':'LE=F',
-                        'Porcos Magros':'LE=F',
+    acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-                        'Milho':'ZC=F',
-                        'Soja':'ZS=F',
-                        'Cacau':'CC=F',
-                        'Café':'KC=F'}    
-
-        acoes = ["PETR4", "VALE3","ITUB4", "BBAS3", "BBDC4",
-                "RAIZ4","PRIO3", "VBBR3", "CSAN3", "UGPA3",  
-                "BPAC11", "SANB11", "GGBR4", "CSNA3", "USIM5",  
-                "JBSS3", "ABEV3", "MRFG3", "BRFS3", "BEEF3",  
-                "ELET3", "NEOE3", "CPFE3", "ENGI11", "EQTL3",  
-                "SUZB3", "KLBN11", "DTEX3", "RANI3", "MRFG3", 
-                "CYRE3", "MRVE3", "EZTC3", "CVCB3", "TRIS3", 
-                "WEGE3", "B3SA3"]
-
-        acoes_dict = {acao: acao + '.SA' for acao in acoes}
-
+    # Layout para selecionar os ativos e definir o período dentro do expander
+    with st.expander('Selecione os Ativos e o Período', expanded=True):
         col1, col2, col3 = st.columns([3, 1, 1])
+
+        # Seleção de opções
+        opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
 
         with col1:
             if opcao1 == 'Índices':
@@ -258,22 +241,14 @@ def app():
         with col3:
             data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
 
-        submit_button = st.form_submit_button(label='Carregar Dados')
-
-    # Verificar se nenhum ativo foi selecionado
-    if submit_button:
-        if not ticker:
-            st.error("Por favor, selecione pelo menos um ativo antes de continuar.")  # Exibe erro se nenhum ativo for selecionado
-        else:
-            # Opção para visualizar valores normalizados ou brutos
+        # Carregar os dados reais e mostrar o gráfico
+        if ticker:
             normalizado = st.checkbox("Exibir desempenho percentual", value=True)
 
-            # Carregar os dados reais
-            dados = carregar_dados(ticker, data_inicio, data_fim)
-            if not dados.empty:
-                fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
-                st.plotly_chart(fig)
-            else:
-                st.warning("Nenhum dado disponível para os tickers selecionados.")
-
+        dados = carregar_dados(ticker, data_inicio, data_fim)
+        if not dados.empty:
+            fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
+            st.plotly_chart(fig)
+        else:
+            st.warning("Nenhum dado disponível para os tickers selecionados.")
 
