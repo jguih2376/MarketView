@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 def app():
-    with st.expander('Escolha', expanded=True):
+    st.write('Análise Histórica')
+    st.subheader('Retorno Mensal')
+    with st.expander('...', expanded=True):
         opcao = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
 
         if opcao == 'Índices':
@@ -114,15 +116,14 @@ def app():
         else:
             st.error("Erro ao buscar os dados. Verifique o ticker ou tente novamente mais tarde.")
 
-#_______________________________________________________________________________
+#________________________________________________________________________________________________________________________________________________________
     st.markdown('---')
     # Função para carregar os dados usando yfinance
     @st.cache_data
     def carregar_dados(tickers, data_inicio, data_fim):
-        # Função para carregar os dados usando yfinance
         dados = {}
         for ticker in tickers:
-            hist = yf.Ticker(ticker + '.SA').history(start=data_inicio, end=data_fim)['Close']
+            hist = yf.Ticker(ticker).history(start=data_inicio, end=data_fim)['Close']
             dados[ticker] = hist
         return pd.DataFrame(dados)
 
@@ -133,7 +134,6 @@ def app():
         return dados
 
     def criar_grafico(ativos_selecionados, dados):
-        # Função para criar o gráfico
         fig = go.Figure()
         for ativo in ativos_selecionados:
             fig.add_trace(go.Scatter(
@@ -158,26 +158,49 @@ def app():
 
     st.subheader('Desempenho Relativo')
 
-    # Seleção de datas
-    data_inicio = st.date_input('Data de início', pd.to_datetime('2015-01-01').date(), format='DD/MM/YYYY')
-    data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+    opcao = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
 
-    # Lista predefinida de tickers (ações brasileiras)
-    tickers = ['PETR4', 'VALE3', 'ITUB4', 'BBAS3', 'ABEV3', 'WEGE3', 'RENT3', 'JBSS3', 'ELET3']
+    indices = {'IBOV': '^BVSP', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
+            'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
 
-    # Carregar os dados
-    dados = carregar_dados(tickers, data_inicio, data_fim)
+    commodities = {'Ouro': 'GC=F', 'Prata': 'SI=F', 'Platina': 'PL=F', 'Cobre': 'HG=F', 'WTI Oil': 'CL=F', 
+                'Brent Oil': 'BZ=F', 'Milho': 'ZC=F', 'Soja': 'ZS=F', 'Café': 'KC=F'}
 
-    # Verificar se há dados carregados antes de calcular a performance
+    acoes = ['ALOS3', 'ABEV3', 'ASAI3', 'AURE3', 'AMOB3', 'AZUL4', 'AZZA3', 'B3SA3', 'BBSE3', 'BBDC3', 'BBDC4', 
+            'BRAP4', 'BBAS3', 'BRKM5', 'BRAV3', 'BRFS3', 'BPAC11', 'CXSE3', 'CRFB3', 'CCRO3', 'CMIG4', 'COGN3', 
+            'CPLE6', 'CSAN3', 'CPFE3', 'CMIN3', 'CVCB3', 'CYRE3', 'ELET3', 'ELET6', 'EMBR3', 'ENGI11', 'ENEV3', 
+            'EGIE3', 'EQTL3', 'FLRY3', 'GGBR4', 'GOAU4', 'NTCO3', 'HAPV3', 'HYPE3', 'IGTI11', 'IRBR3', 'ISAE4', 
+            'ITSA4', 'ITUB4', 'JBSS3', 'KLBN11', 'RENT3', 'LREN3', 'LWSA3', 'MGLU3', 'POMO4', 'MRFG3', 'BEEF3', 
+            'MRVE3', 'MULT3', 'PCAR3', 'PETR3', 'PETR4', 'RECV3', 'PRIO3', 'PETZ3', 'PSSA3', 'RADL3', 'RAIZ4', 
+            'RDOR3', 'RAIL3', 'SBSP3', 'SANB11', 'STBP3', 'SMTO3', 'CSNA3', 'SLCE3', 'SUZB3', 'TAEE11', 'VIVT3', 
+            'TIMS3', 'TOTS3', 'UGPA3', 'USIM5', 'VALE3', 'VAMO3', 'VBBR3', 'VIVA3', 'WEGE3', 'YDUQ3']
+
+    acoes_dict = {acao: acao + '.SA' for acao in acoes}
+    col1,col2,col3=st.columns([4,1,1])
+
+    with col1:
+        if opcao == 'Índices':
+            escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
+            ticker = [indices[indice] for indice in escolha]
+
+        elif opcao == 'Commodities':
+            escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
+            ticker = [commodities[commodity] for commodity in escolha]
+
+        elif opcao == 'Ações':
+            escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
+            ticker = [acoes_dict[acao] for acao in escolha]
+
+    with col2:
+        data_inicio = st.date_input('Data de início', pd.to_datetime('2015-01-01').date(), format='DD/MM/YYYY')
+    with col3:
+        data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+
+    # Carregar os dados reais
+    dados = carregar_dados(ticker, data_inicio, data_fim)
     if not dados.empty:
-        dados = calcular_performance(dados)
-
-    # Criação do componente multiselect
-    ativos_selecionados = st.multiselect('Selecione:', options=tickers, placeholder="Ativos")
-
-    # Exibir o gráfico
-    if ativos_selecionados:
-        fig = criar_grafico(ativos_selecionados, dados)
+        fig = criar_grafico(ticker, calcular_performance(dados))
         st.plotly_chart(fig)
     else:
-        st.write('Selecione pelo menos um ativo.')
+        st.write("Nenhum dado disponível para os tickers selecionados.")
+
