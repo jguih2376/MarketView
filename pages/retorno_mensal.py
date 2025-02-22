@@ -239,7 +239,7 @@ def app():
 
         with col1:
             if opcao1 == 'Índices':
-                escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
+                escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
                 ticker = [indices[indice] for indice in escolha]
                 legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
