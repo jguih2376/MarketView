@@ -13,7 +13,9 @@ def app():
         Utilize o menu lateral para explorar as diversas páginas e funcionalidades do sistema, como:
         - Calendário Econômico
         - Panorama do Mercado
-        - Retorno Mensal
+        - Análise Histórica
+             - Retorno Mensal
+             - Desempenho Relativo
         - Política Monetária
         - Fundamentos de Ações
 
