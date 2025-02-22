@@ -13,66 +13,66 @@ def app():
 
 
     # Formulário principal
-    with st.form(key='form_ativo'):
+    with st.expander('...', expanded=True):
         opcao = st.radio('', ['Índices', 'Ações', 'Commodities'])
+        with st.form(key='form_ativo'):
+            if opcao == 'Índices':
+                indices = {'IBOV': '^BVSP',
+                        'S&P500': '^GSPC',     
+                        'NASDAQ': '^IXIC',
+                        'FTSE100':'^FTSE',
+                        'DAX':'^GDAXI',
+                        'CAC40':'^FCHI',
+                        'SSE Composite':'000001.SS',
+                        'Nikkei225':'^N225',
+                        'Merval':'^MERV'}
+                
+                escolha = st.selectbox('Selecione o Ativo:', list(indices.keys()))
+                analisar = st.form_submit_button('Analisar')
+                ticker = indices[escolha]
 
-        if opcao == 'Índices':
-            indices = {'IBOV': '^BVSP',
-                    'S&P500': '^GSPC',     
-                    'NASDAQ': '^IXIC',
-                    'FTSE100':'^FTSE',
-                    'DAX':'^GDAXI',
-                    'CAC40':'^FCHI',
-                    'SSE Composite':'000001.SS',
-                    'Nikkei225':'^N225',
-                    'Merval':'^MERV'}
-            
-            escolha = st.selectbox('Selecione o Ativo:', list(indices.keys()))
-            analisar = st.form_submit_button('Analisar')
-            ticker = indices[escolha]
+            elif opcao == 'Commodities':
+                commodities = {'Ouro': 'GC=F',
+                            'Prata': 'SI=F',
+                            'Platinum': 'PL=F',     
+                            'Cobre': 'HG=F',
+                            
+                            'WTI Oil':'CL=F',
+                            'Brent Oil':'BZ=F',
+                            'Gasolina':'RB=F',
+                            'Gás Natural':'NG=F',
+                            
+                            'Gado Vivo':'LE=F',
+                            'Porcos Magros':'LE=F',
 
-        elif opcao == 'Commodities':
-            commodities = {'Ouro': 'GC=F',
-                        'Prata': 'SI=F',
-                        'Platinum': 'PL=F',     
-                        'Cobre': 'HG=F',
-                        
-                        'WTI Oil':'CL=F',
-                        'Brent Oil':'BZ=F',
-                        'Gasolina':'RB=F',
-                        'Gás Natural':'NG=F',
-                        
-                        'Gado Vivo':'LE=F',
-                        'Porcos Magros':'LE=F',
+                            'Milho':'ZC=F',
+                            'Soja':'ZS=F',
+                            'Cacau':'CC=F',
+                            'Café':'KC=F'}    
+                
+                escolha = st.selectbox('Selecione o Ativo:', list(commodities.keys()))
+                analisar = st.form_submit_button('Analisar')
+                ticker = commodities[escolha]
 
-                        'Milho':'ZC=F',
-                        'Soja':'ZS=F',
-                        'Cacau':'CC=F',
-                        'Café':'KC=F'}    
-            
-            escolha = st.selectbox('Selecione o Ativo:', list(commodities.keys()))
-            analisar = st.form_submit_button('Analisar')
-            ticker = commodities[escolha]
+            elif opcao == 'Ações':
+                acoes = ['ALOS3', 'ABEV3', 'ASAI3', 'AURE3', 'AMOB3', 'AZUL4', 'AZZA3', 'B3SA3', 'BBSE3', 'BBDC3', 'BBDC4', 
+                        'BRAP4', 'BBAS3', 'BRKM5', 'BRAV3', 'BRFS3', 'BPAC11', 'CXSE3', 'CRFB3', 'CCRO3', 'CMIG4', 'COGN3', 
+                        'CPLE6', 'CSAN3', 'CPFE3', 'CMIN3', 'CVCB3', 'CYRE3', 'ELET3', 'ELET6', 'EMBR3', 'ENGI11', 'ENEV3', 
+                        'EGIE3', 'EQTL3', 'FLRY3', 'GGBR4', 'GOAU4', 'NTCO3', 'HAPV3', 'HYPE3', 'IGTI11', 'IRBR3', 'ISAE4', 
+                        'ITSA4', 'ITUB4', 'JBSS3', 'KLBN11', 'RENT3', 'LREN3', 'LWSA3', 'MGLU3', 'POMO4', 'MRFG3', 'BEEF3', 
+                        'MRVE3', 'MULT3', 'PCAR3', 'PETR3', 'PETR4', 'RECV3', 'PRIO3', 'PETZ3', 'PSSA3', 'RADL3', 'RAIZ4', 
+                        'RDOR3', 'RAIL3', 'SBSP3', 'SANB11', 'STBP3', 'SMTO3', 'CSNA3', 'SLCE3', 'SUZB3', 'TAEE11', 'VIVT3', 
+                        'TIMS3', 'TOTS3', 'UGPA3', 'USIM5', 'VALE3', 'VAMO3', 'VBBR3', 'VIVA3', 'WEGE3', 'YDUQ3']
 
-        elif opcao == 'Ações':
-            acoes = ['ALOS3', 'ABEV3', 'ASAI3', 'AURE3', 'AMOB3', 'AZUL4', 'AZZA3', 'B3SA3', 'BBSE3', 'BBDC3', 'BBDC4', 
-                    'BRAP4', 'BBAS3', 'BRKM5', 'BRAV3', 'BRFS3', 'BPAC11', 'CXSE3', 'CRFB3', 'CCRO3', 'CMIG4', 'COGN3', 
-                    'CPLE6', 'CSAN3', 'CPFE3', 'CMIN3', 'CVCB3', 'CYRE3', 'ELET3', 'ELET6', 'EMBR3', 'ENGI11', 'ENEV3', 
-                    'EGIE3', 'EQTL3', 'FLRY3', 'GGBR4', 'GOAU4', 'NTCO3', 'HAPV3', 'HYPE3', 'IGTI11', 'IRBR3', 'ISAE4', 
-                    'ITSA4', 'ITUB4', 'JBSS3', 'KLBN11', 'RENT3', 'LREN3', 'LWSA3', 'MGLU3', 'POMO4', 'MRFG3', 'BEEF3', 
-                    'MRVE3', 'MULT3', 'PCAR3', 'PETR3', 'PETR4', 'RECV3', 'PRIO3', 'PETZ3', 'PSSA3', 'RADL3', 'RAIZ4', 
-                    'RDOR3', 'RAIL3', 'SBSP3', 'SANB11', 'STBP3', 'SMTO3', 'CSNA3', 'SLCE3', 'SUZB3', 'TAEE11', 'VIVT3', 
-                    'TIMS3', 'TOTS3', 'UGPA3', 'USIM5', 'VALE3', 'VAMO3', 'VBBR3', 'VIVA3', 'WEGE3', 'YDUQ3']
+                # Criando um dicionário com chave como o nome da ação e valor como o nome da ação com '.SA'
+                acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-            # Criando um dicionário com chave como o nome da ação e valor como o nome da ação com '.SA'
-            acoes_dict = {acao: acao + '.SA' for acao in acoes}
-
-            escolha = st.selectbox('Selecione o Ativo:', list(acoes_dict.keys()))
-            analisar = st.form_submit_button('Analisar')
-            ticker = acoes_dict[escolha]
-            if analisar:
-                st.write(f'Você selecionou a ação: {escolha}')
-                st.write(f'Ticker: {ticker}')
+                escolha = st.selectbox('Selecione o Ativo:', list(acoes_dict.keys()))
+                analisar = st.form_submit_button('Analisar')
+                ticker = acoes_dict[escolha]
+                if analisar:
+                    st.write(f'Você selecionou a ação: {escolha}')
+                    st.write(f'Ticker: {ticker}')
 
         if analisar:
             data_inicial = ('1999-12-01')
@@ -222,17 +222,17 @@ def app():
 
             with col1:
                 if opcao1 == 'Índices':
-                    escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
+                    escolha = st.multiselect('', list(indices.keys()), placeholder='Índices')
                     ticker = [indices[indice] for indice in escolha]
                     legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Commodities':
-                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
+                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Commodities')
                     ticker = [commodities[commodity] for commodity in escolha]
                     legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Ações':
-                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
+                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ações')
                     ticker = [acoes_dict[acao] for acao in escolha]
                     legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
