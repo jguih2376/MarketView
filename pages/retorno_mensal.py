@@ -217,38 +217,46 @@ def app():
     with st.expander('...', expanded=True):
         # Seleção de opções
         opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
-        col1, col2, col3 = st.columns([3, 1, 1])
+        with st.form(key='meu_form'):
+            col1, col2, col3 = st.columns([3, 1, 1])
 
+            with col1:
+                opcao1 = st.selectbox('Escolha o tipo de ativo', ['Índices', 'Commodities', 'Ações'])
 
-        with col1:
-            if opcao1 == 'Índices':
-                escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
-                ticker = [indices[indice] for indice in escolha]
-                legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
+                if opcao1 == 'Índices':
+                    escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
+                    ticker = [indices[indice] for indice in escolha]
+                    legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
-            elif opcao1 == 'Commodities':
-                escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
-                ticker = [commodities[commodity] for commodity in escolha]
-                legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
+                elif opcao1 == 'Commodities':
+                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
+                    ticker = [commodities[commodity] for commodity in escolha]
+                    legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
-            elif opcao1 == 'Ações':
-                escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
-                ticker = [acoes_dict[acao] for acao in escolha]
-                legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
+                elif opcao1 == 'Ações':
+                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
+                    ticker = [acoes_dict[acao] for acao in escolha]
+                    legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
-        with col2:
-            data_inicio = st.date_input('Data de início', pd.to_datetime('2020-01-01').date(), format='DD/MM/YYYY')
-        with col3:
-            data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+            with col2:
+                data_inicio = st.date_input('Data de início', pd.to_datetime('2020-01-01').date(), format='DD/MM/YYYY')
 
-        # Carregar os dados reais e mostrar o gráfico
-        if ticker:
+            with col3:
+                data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+
+            # Adicionando o checkbox para desempenho percentual
             normalizado = st.checkbox("Exibir desempenho percentual", value=True)
 
-        dados = carregar_dados(ticker, data_inicio, data_fim)
-        if not dados.empty:
-            fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
-            st.plotly_chart(fig)
-        else:
-            st.warning("Nenhum dado disponível para os tickers selecionados.")
+            # Submissão do formulário
+            submit_button = st.form_submit_button(label='Gerar Gráfico')
+
+        # Carregar os dados reais e mostrar o gráfico quando o botão for pressionado
+        if submit_button and ticker:
+
+            dados = carregar_dados(ticker, data_inicio, data_fim)
+            if not dados.empty:
+                fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
+                st.plotly_chart(fig)
+            else:
+                st.warning("Nenhum dado disponível para os tickers selecionados.")
 
