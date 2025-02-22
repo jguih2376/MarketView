@@ -164,8 +164,8 @@ def app():
                             x=dados_pct_acumulado.index,
                             y=dados_pct_acumulado[ativo],
                             mode='lines',
-                            name=ativo,
-                            line=dict(width=1)  # Definindo a largura da linha como 1 (linha fina)
+                            name=str(ativo),  # Garante que a legenda use a chave como nome
+                            line=dict(width=1)  # Linha fina
                         ))
 
                         # Adicionando bolinha no último ponto
@@ -174,8 +174,8 @@ def app():
                             y=[dados_pct_acumulado[ativo].iloc[-1]],  # Último valor
                             mode='markers',
                             marker=dict(size=5, color='red', symbol='circle'),
-                            name=f'{ativo} - Último Preço',
-                            showlegend=False
+                            name=str(ativo),  # Usa a chave do ativo como legenda
+                            showlegend=False  # Evita duplicação na legenda
                         ))
 
                         # Adicionando anotação para destacar o valor atual de cada ativo
@@ -193,21 +193,21 @@ def app():
                 # Ajustando a aparência do gráfico
                 fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
                 fig.update_layout(
-                title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
-                yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
-                legend_title='Ativos',
-                plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
-                xaxis=dict(showgrid=False),
-                height=600,
-                legend=dict(
-                    orientation='h',  # Coloca a legenda de forma horizontal
-
-                    y=-0.25,  # Define a posição vertical abaixo do gráfico
-                    yanchor='bottom',  # Anexa a legenda na parte inferior
+                    title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
+                    yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
+                    legend_title='Ativos',
+                    plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
+                    xaxis=dict(showgrid=False),
+                    height=600,
+                    legend=dict(
+                        orientation='h',  # Coloca a legenda de forma horizontal
+                        y=-0.2,  # Define a posição vertical abaixo do gráfico
+                        yanchor='bottom',  # Anexa a legenda na parte inferior
+                    )
                 )
-            )
 
                 st.plotly_chart(fig)
+
 
         except Exception as e:
             st.error(f'Ocorreu um erro: {e}')
