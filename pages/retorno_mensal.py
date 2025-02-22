@@ -8,23 +8,28 @@ import plotly.graph_objects as go
 def app():
     st.write('Análise Histórica')
     st.subheader('Retorno Mensal')
-    with st.expander('...', expanded=True):
+   
+
+
+
+    # Formulário principal
+    with st.form(key='form_ativo'):
         opcao = st.radio('Selecione:', ['Índices', 'Ações', 'Commodities'])
 
         if opcao == 'Índices':
             indices = {'IBOV': '^BVSP',
-                        'S&P500': '^GSPC',     
-                        'NASDAQ': '^IXIC',
-                        'FTSE100':'^FTSE',
-                        'DAX':'^GDAXI',
-                        'CAC40':'^FCHI',
-                        'SSE Composite':'000001.SS',
-                        'Nikkei225':'^N225',
-                        'Merval':'^MERV'}
-            with st.form(key='form_indice'):
-                escolha = st.selectbox('Índice', list(indices.keys()))
-                analisar = st.form_submit_button('Analisar')
-                ticker = indices[escolha]
+                    'S&P500': '^GSPC',     
+                    'NASDAQ': '^IXIC',
+                    'FTSE100':'^FTSE',
+                    'DAX':'^GDAXI',
+                    'CAC40':'^FCHI',
+                    'SSE Composite':'000001.SS',
+                    'Nikkei225':'^N225',
+                    'Merval':'^MERV'}
+            
+            escolha = st.selectbox('Selecione o Índice', list(indices.keys()))
+            analisar = st.form_submit_button('Analisar')
+            ticker = indices[escolha]
 
         elif opcao == 'Commodities':
             commodities = {'Ouro': 'GC=F',
@@ -36,10 +41,10 @@ def app():
                         'Milho':'ZC=F',
                         'Soja':'ZS=F',
                         'Café':'KC=F'}    
-            with st.form(key='form_commodities'):
-                escolha = st.selectbox('Commodities', list(commodities.keys()))
-                analisar = st.form_submit_button('Analisar')
-                ticker = commodities[escolha]
+            
+            escolha = st.selectbox('Selecione a Commodity', list(commodities.keys()))
+            analisar = st.form_submit_button('Analisar')
+            ticker = commodities[escolha]
 
         elif opcao == 'Ações':
             acoes = ['ALOS3', 'ABEV3', 'ASAI3', 'AURE3', 'AMOB3', 'AZUL4', 'AZZA3', 'B3SA3', 'BBSE3', 'BBDC3', 'BBDC4', 
@@ -54,67 +59,69 @@ def app():
             # Criando um dicionário com chave como o nome da ação e valor como o nome da ação com '.SA'
             acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-            with st.form(key='form_acoes'):
-                escolha = st.selectbox('Ações', list(acoes_dict.keys()))
-                analisar = st.form_submit_button('Analisar')
-                ticker = acoes_dict[escolha]
+            escolha = st.selectbox('Selecione a Ação', list(acoes_dict.keys()))
+            analisar = st.form_submit_button('Analisar')
+            ticker = acoes_dict[escolha]
+            if analisar:
+                st.write(f'Você selecionou a ação: {escolha}')
+                st.write(f'Ticker: {ticker}')
 
-    if analisar:
-        data_inicial = ('1999-12-01')
-        data_final = ('2030-12-31')
+        if analisar:
+            data_inicial = ('1999-12-01')
+            data_final = ('2030-12-31')
 
-        # Baixa os dados do Yahoo Finance
-        dados = yf.download(ticker, start=data_inicial, end=data_final, interval="1mo")
+            # Baixa os dados do Yahoo Finance
+            dados = yf.download(ticker, start=data_inicial, end=data_final, interval="1mo")
 
-        if not dados.empty:
-            retornos = dados['Close'].pct_change().dropna()
-            # Adiciona colunas de ano e mês para organização
-            retornos = retornos.reset_index()
-            retornos['Year'] = retornos['Date'].dt.year
-            retornos['Month'] = retornos['Date'].dt.month
+            if not dados.empty:
+                retornos = dados['Close'].pct_change().dropna()
+                # Adiciona colunas de ano e mês para organização
+                retornos = retornos.reset_index()
+                retornos['Year'] = retornos['Date'].dt.year
+                retornos['Month'] = retornos['Date'].dt.month
 
-            # Criar a tabela pivot sem média, apenas reorganizando os dados
-            tabela_retornos = retornos.pivot(index='Year', columns='Month', values=ticker)
-            tabela_retornos.columns = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
-                                        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+                # Criar a tabela pivot sem média, apenas reorganizando os dados
+                tabela_retornos = retornos.pivot(index='Year', columns='Month', values=ticker)
+                tabela_retornos.columns = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+                                            'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-            # Criando Heatmap
-            fig, ax = plt.subplots(figsize=(12, 9))
-            cmap = sns.color_palette('RdYlGn', 15)
-            sns.heatmap(tabela_retornos, cmap=cmap, annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
-                        linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
-            ax.set_title(f'Heatmap Retorno Mensal - {escolha}', fontsize=18)
-            ax.set_yticklabels(ax.get_yticklabels(), rotation=0, verticalalignment='center', fontsize='12')
-            ax.set_xticklabels(ax.get_xticklabels(), fontsize='12')
-            plt.ylabel('')
-            st.pyplot(fig)
+                # Criando Heatmap
+                fig, ax = plt.subplots(figsize=(12, 9))
+                cmap = sns.color_palette('RdYlGn', 15)
+                sns.heatmap(tabela_retornos, cmap=cmap, annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
+                            linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
+                ax.set_title(f'Heatmap Retorno Mensal - {escolha}', fontsize=18)
+                ax.set_yticklabels(ax.get_yticklabels(), rotation=0, verticalalignment='center', fontsize='12')
+                ax.set_xticklabels(ax.get_xticklabels(), fontsize='12')
+                plt.ylabel('')
+                st.pyplot(fig)
 
-            # Estatísticas
-            stats = pd.DataFrame(tabela_retornos.mean(), columns=['Média'])
-            stats['Mediana'] = tabela_retornos.median()
-            stats['Maior'] = tabela_retornos.max()
-            stats['Menor'] = tabela_retornos.min()
-            stats['Positivos'] = tabela_retornos.gt(0).sum() / tabela_retornos.count() # .gt(greater than) = Contagem de números maior que zero
-            stats['Negativos'] = tabela_retornos.le(0).sum() / tabela_retornos.count() # .le(less than) = Contagem de números menor que zero
+                # Estatísticas
+                stats = pd.DataFrame(tabela_retornos.mean(), columns=['Média'])
+                stats['Mediana'] = tabela_retornos.median()
+                stats['Maior'] = tabela_retornos.max()
+                stats['Menor'] = tabela_retornos.min()
+                stats['Positivos'] = tabela_retornos.gt(0).sum() / tabela_retornos.count() # .gt(greater than) = Contagem de números maior que zero
+                stats['Negativos'] = tabela_retornos.le(0).sum() / tabela_retornos.count() # .le(less than) = Contagem de números menor que zero
 
-            # Stats_A
-            stats_a = stats[['Média', 'Mediana', 'Maior', 'Menor']].transpose()
+                # Stats_A
+                stats_a = stats[['Média', 'Mediana', 'Maior', 'Menor']].transpose()
 
-            fig, ax = plt.subplots(figsize=(12, 2))
-            sns.heatmap(stats_a, cmap=cmap, annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
-                        linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
-            st.pyplot(fig)
+                fig, ax = plt.subplots(figsize=(12, 2))
+                sns.heatmap(stats_a, cmap=cmap, annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
+                            linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
+                st.pyplot(fig)
 
-            # Stats_B
-            stats_b = stats[['Positivos', 'Negativos']].transpose()
+                # Stats_B
+                stats_b = stats[['Positivos', 'Negativos']].transpose()
 
-            fig, ax = plt.subplots(figsize=(12, 1))
-            sns.heatmap(stats_b, cmap=sns.color_palette("magma", as_cmap=True), annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
-                        linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
-            st.pyplot(fig)
+                fig, ax = plt.subplots(figsize=(12, 1))
+                sns.heatmap(stats_b, cmap=sns.color_palette("magma", as_cmap=True), annot=True, fmt='.2%', center=0, vmax=0.025, vmin=-0.025, cbar=False,
+                            linewidths=0.5, xticklabels=True, yticklabels=True, ax=ax)
+                st.pyplot(fig)
 
-        else:
-            st.error("Erro ao buscar os dados. Verifique o ticker ou tente novamente mais tarde.")
+            else:
+                st.error("Erro ao buscar os dados. Verifique o ticker ou tente novamente mais tarde.")
 
 #________________________________________________________________________________________________________________________________________________________
     st.markdown('---')
@@ -185,60 +192,65 @@ def app():
 
     st.subheader('Desempenho Relativo')
 
-    opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
+    with st.form(key='formulario_dados'):
+        opcao1 = st.selectbox('Selecione', ['Índices', 'Ações', 'Commodities'])
 
-    indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
-            'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
+        indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
+                'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
 
-    commodities = {'Ouro': 'GC=F', 'Prata': 'SI=F', 'Platina': 'PL=F', 'Cobre': 'HG=F', 'WTI Oil': 'CL=F', 
-                'Brent Oil': 'BZ=F', 'Milho': 'ZC=F', 'Soja': 'ZS=F', 'Café': 'KC=F'}
+        commodities = {'Ouro': 'GC=F', 'Prata': 'SI=F', 'Platina': 'PL=F', 'Cobre': 'HG=F', 'WTI Oil': 'CL=F', 
+                    'Brent Oil': 'BZ=F', 'Milho': 'ZC=F', 'Soja': 'ZS=F', 'Café': 'KC=F'}
 
-    acoes = ["PETR4", "VALE3","ITUB4", "BBAS3", "BBDC4",
-            "RAIZ4","PRIO3", "VBBR3", "CSAN3", "UGPA3",  
-            "BPAC11", "SANB11", "GGBR4", "CSNA3", "USIM5",  
-            "JBSS3", "ABEV3", "MRFG3", "BRFS3", "BEEF3",  
-            "ELET3", "NEOE3", "CPFE3", "ENGI11", "EQTL3",  
-            "SUZB3", "KLBN11", "DTEX3", "RANI3", "MRFG3", 
-            "CYRE3", "MRVE3", "EZTC3", "CVCB3", "TRIS3", 
-            "WEGE3", "B3SA3"]
+        acoes = ["PETR4", "VALE3","ITUB4", "BBAS3", "BBDC4",
+                "RAIZ4","PRIO3", "VBBR3", "CSAN3", "UGPA3",  
+                "BPAC11", "SANB11", "GGBR4", "CSNA3", "USIM5",  
+                "JBSS3", "ABEV3", "MRFG3", "BRFS3", "BEEF3",  
+                "ELET3", "NEOE3", "CPFE3", "ENGI11", "EQTL3",  
+                "SUZB3", "KLBN11", "DTEX3", "RANI3", "MRFG3", 
+                "CYRE3", "MRVE3", "EZTC3", "CVCB3", "TRIS3", 
+                "WEGE3", "B3SA3"]
 
-    acoes_dict = {acao: acao + '.SA' for acao in acoes}
+        acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-    col1, col2, col3 = st.columns([3, 1, 1])
+        col1, col2, col3 = st.columns([3, 1, 1])
 
-    with col1:
-        if opcao1 == 'Índices':
-            escolha = st.multiselect('', list(indices.keys()), placeholder='Ativos')
-            ticker = [indices[indice] for indice in escolha]
-            legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
+        with col1:
+            if opcao1 == 'Índices':
+                escolha = st.multiselect('Índice', list(indices.keys()), placeholder='Ativos')
+                ticker = [indices[indice] for indice in escolha]
+                legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
-        elif opcao1 == 'Commodities':
-            escolha = st.multiselect('', list(commodities.keys()), placeholder='Ativos')
-            ticker = [commodities[commodity] for commodity in escolha]
-            legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
+            elif opcao1 == 'Commodities':
+                escolha = st.multiselect('Commodities', list(commodities.keys()), placeholder='Ativos')
+                ticker = [commodities[commodity] for commodity in escolha]
+                legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
-        elif opcao1 == 'Ações':
-            escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ativos')
-            ticker = [acoes_dict[acao] for acao in escolha]
-            legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
+            elif opcao1 == 'Ações':
+                escolha = st.multiselect('Ações', list(acoes_dict.keys()), placeholder='Ativos')
+                ticker = [acoes_dict[acao] for acao in escolha]
+                legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
-    with col2:
-        data_inicio = st.date_input('Data de início', pd.to_datetime('2020-01-01').date(), format='DD/MM/YYYY')
-    with col3:
-        data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
+        with col2:
+            data_inicio = st.date_input('Data de início', pd.to_datetime('2020-01-01').date(), format='DD/MM/YYYY')
+        with col3:
+            data_fim = st.date_input('Data de término', pd.to_datetime('today').date(), format='DD/MM/YYYY')
 
-    # Opção para visualizar valores normalizados ou brutos
-    normalizado = st.checkbox("Exibir desempenho percentual", value=True)
+        submit_button = st.form_submit_button(label='Carregar Dados')
 
-    # Carregar os dados reais
-    if ticker:
-        dados = carregar_dados(ticker, data_inicio, data_fim)
-        if not dados.empty:
-            fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
-            st.plotly_chart(fig)
+    # Verificar se nenhum ativo foi selecionado
+    if submit_button:
+        if not ticker:
+            st.error("Por favor, selecione pelo menos um ativo antes de continuar.")  # Exibe erro se nenhum ativo for selecionado
         else:
-            st.warning("Nenhum dado disponível para os tickers selecionados.")
-    else:
-        st.info("Selecione pelo menos um ativo para exibir os dados.")
+            # Opção para visualizar valores normalizados ou brutos
+            normalizado = st.checkbox("Exibir desempenho percentual", value=True)
+
+            # Carregar os dados reais
+            dados = carregar_dados(ticker, data_inicio, data_fim)
+            if not dados.empty:
+                fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
+                st.plotly_chart(fig)
+            else:
+                st.warning("Nenhum dado disponível para os tickers selecionados.")
 
 
