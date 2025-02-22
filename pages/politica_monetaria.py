@@ -12,7 +12,6 @@ def get_data():
 
 def app():
     st.title("Estatística Monetária")
-    st.write("Atualizações sobre a Selic, IPCA.")
 
     # Obtendo dados com cache
     selic, selic_atual, ipca, ipca_atual = get_data()
