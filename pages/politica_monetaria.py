@@ -8,13 +8,17 @@ def get_data():
     selic_atual = selic.iloc[-1].values[0]
     ipca = sgs.get({'IPCA': 13522}, start='2000-01-01')
     ipca_atual = ipca.iloc[-1].values[0]
-    return selic, selic_atual, ipca, ipca_atual
+
+    # Calcular juros real
+    juros_real = ((1 + selic_atual) / (1 + ipca_atual)) - 1
+    
+    return selic, selic_atual, ipca, ipca_atual, juros_real
 
 def app():
     st.title("Estatística Monetária")
 
     # Obtendo dados com cache
-    selic, selic_atual, ipca, ipca_atual = get_data()
+    selic, selic_atual, ipca, ipca_atual, juros_real = get_data()
 
     col1, col2 = st.columns([5, 1])
     with col1:
@@ -27,6 +31,7 @@ def app():
             title='Taxa de Juros SELIC',
             title_x=0.4, 
             yaxis_title='Taxa de Juros (%)',
+
             showlegend=False,
             plot_bgcolor='rgba(211, 211, 211, 0.15)'  # Cor de fundo cinza claro
         )
@@ -54,7 +59,6 @@ def app():
             title='IPCA Acumulado 12M',
             title_x=0.4, 
             yaxis_title='IPCA acumulado (%)',
-            xaxis_title='Data',
             showlegend=False,
             plot_bgcolor='rgba(211, 211, 211, 0.15)'  # Cor de fundo cinza claro
         )
@@ -93,3 +97,4 @@ def app():
         """
 
         st.components.v1.html(iframe_code, height=180)
+    
