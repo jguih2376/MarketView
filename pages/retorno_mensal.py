@@ -185,7 +185,7 @@ def app():
 
     st.subheader('Desempenho Relativo')
 
-    opcao1 = st.radio('Selecione', ['Índices', 'Ações', 'Commodities'])
+    opcao1 = st.selectbox('Selecione', ['Índices', 'Ações', 'Commodities'])
 
     indices = {'IBOV': '^BVSP','EWZ':'EWZ', 'S&P500': '^GSPC', 'NASDAQ': '^IXIC', 'FTSE100': '^FTSE', 'DAX': '^GDAXI', 
             'CAC40': '^FCHI', 'SSE Composite': '000001.SS', 'Nikkei225': '^N225', 'Merval': '^MERV'}
