@@ -27,7 +27,6 @@ def app():
             title='Taxa de Juros SELIC',
             title_x=0.4, 
             yaxis_title='Taxa de Juros (%)',
-            xaxis_title='Data',
             showlegend=False,
             plot_bgcolor='rgba(211, 211, 211, 0.15)'  # Cor de fundo cinza claro
         )

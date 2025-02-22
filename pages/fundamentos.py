@@ -194,7 +194,6 @@ def app():
                 fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
                 fig.update_layout(
                 title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
-                xaxis_title='Data',
                 yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
                 legend_title='Ativos',
                 plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
@@ -203,7 +202,7 @@ def app():
                 legend=dict(
                     orientation='h',  # Coloca a legenda de forma horizontal
 
-                    y=-0.5,  # Define a posição vertical abaixo do gráfico
+                    y=-0.25,  # Define a posição vertical abaixo do gráfico
                     yanchor='bottom',  # Anexa a legenda na parte inferior
                 )
             )

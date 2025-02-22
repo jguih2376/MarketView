@@ -6,15 +6,12 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 def app():
-    st.title('Análise Histórica')
+    st.title('📊 Análise Histórica')
+    
     st.subheader('Retorno Mensal')
-   
-
-
-
     # Formulário principal
     with st.expander('...', expanded=True):
-        opcao = st.radio('', ['Índices', 'Ações', 'Commodities'])
+        opcao = st.radio('Selecione:', ['Índices', 'Ações', 'Commodities'])
         with st.form(key='form_ativo'):
             if opcao == 'Índices':
                 indices = {'IBOV': '^BVSP',
@@ -27,7 +24,7 @@ def app():
                         'Nikkei225':'^N225',
                         'Merval':'^MERV'}
                 
-                escolha = st.selectbox('Selecione o Ativo:', list(indices.keys()))
+                escolha = st.selectbox('', list(indices.keys()))
                 analisar = st.form_submit_button('Analisar')
                 ticker = indices[escolha]
 
@@ -132,8 +129,9 @@ def app():
                 st.error("Erro ao buscar os dados. Verifique o ticker ou tente novamente mais tarde.")
 
 #________________________________________________________________________________________________________________________________________________________
+    st.write('---')
 # Título da página
-    st.subheader("📊 Desempenho Relativo dos Ativos")
+    st.subheader("Desempenho Relativo dos Ativos")
 
     # Função para carregar os dados usando yfinance
     @st.cache_data(ttl=600)  # Cache atualizado a cada 10 min
