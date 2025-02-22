@@ -7,6 +7,15 @@ st.set_page_config(
     page_icon="📈",           # Ícone na aba do navegador
     layout="wide"             # Layout em tela cheia
 )
+# CSS para esconder todos os nomes da barra lateral
+st.markdown("""
+    <style>
+        [data-testid="stSidebarNav"] ul {
+            display: none;
+        }
+    </style>
+""", unsafe_allow_html=True)
+st.sidebar.image("assets/logo_mv.jpeg")
 
 # Inicializar o estado da página
 if "page" not in st.session_state:
@@ -16,7 +25,7 @@ if "page" not in st.session_state:
 st.sidebar.title("Navegação")
 pagina = st.sidebar.radio(
     "Escolha uma página", 
-    ["Home", "Calendário Econômico", "Panorama do Mercado", "Retorno Mensal", "Política Monetária", "Fundamentos", "Criptos"]
+    ["Home", "Calendário Econômico", "Panorama do Mercado", "Análise Histórica", "Estatística Monetária", "Fundamentos", "Criptos"]
 )
 
 # Redirecionar para as páginas conforme a escolha do usuário
@@ -26,9 +35,9 @@ elif pagina == "Calendário Econômico":
     calendario_economico.app()
 elif pagina == "Panorama do Mercado":
     panorama_do_mercado.app()
-elif pagina == "Retorno Mensal":
+elif pagina == "Análise Histórica":
     retorno_mensal.app()
-elif pagina == "Política Monetária":
+elif pagina == "Estatística Monetária":
     politica_monetaria.app()
 elif pagina == "Fundamentos":
     fundamentos.app()
