@@ -193,14 +193,21 @@ def app():
                 # Ajustando a aparência do gráfico
                 fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
                 fig.update_layout(
-                    title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
-                    xaxis_title='Data',
-                    yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
-                    legend_title='Ativos',
-                    plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
-                    xaxis=dict(showgrid=False),
-                    height=600,
+                title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
+                xaxis_title='Data',
+                yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
+                legend_title='Ativos',
+                plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
+                xaxis=dict(showgrid=False),
+                height=600,
+                legend=dict(
+                    orientation='h',  # Coloca a legenda de forma horizontal
+                    x=0.5,  # Centraliza a legenda horizontalmente
+                    xanchor='center',  # Centraliza em relação ao eixo X
+                    y=-0.15,  # Define a posição vertical abaixo do gráfico
+                    yanchor='bottom',  # Anexa a legenda na parte inferior
                 )
+            )
 
                 st.plotly_chart(fig)
 
