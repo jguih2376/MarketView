@@ -215,10 +215,10 @@ def app():
 
     # Layout para selecionar os ativos e definir o período dentro do expander
     with st.expander('Selecione os Ativos e o Período', expanded=True):
-        col1, col2, col3 = st.columns([3, 1, 1])
-
         # Seleção de opções
         opcao1 = st.selectbox('Selecione:', ['Índices', 'Ações', 'Commodities'])
+        col1, col2, col3 = st.columns([3, 1, 1])
+
 
         with col1:
             if opcao1 == 'Índices':
