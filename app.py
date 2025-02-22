@@ -25,7 +25,7 @@ if "page" not in st.session_state:
 st.sidebar.title("Navegação")
 pagina = st.sidebar.radio(
     "Escolha uma página", 
-    ["Home", "Calendário Econômico", "Panorama do Mercado", "Análise Histórica", "Estatística Monetária", "Fundamentos", "Criptos"]
+    ["Home", "Calendário Econômico", "Panorama do Mercado", "Estatística Monetária", "Análise Histórica", "Fundamentos", "Criptos"]
 )
 
 # Redirecionar para as páginas conforme a escolha do usuário
