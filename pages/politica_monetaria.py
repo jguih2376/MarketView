@@ -129,7 +129,7 @@ def app():
             yaxis_title='Valor em R$',
             showlegend=False,
             plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Fundo mais claro para facilitar leitura
-            margin=dict(l=40, r=40, t=40, b=40)
+           # margin=dict(l=40, r=40, t=40, b=40)
         )
 
         # Ajustes nos eixos
