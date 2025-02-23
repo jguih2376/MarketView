@@ -4,6 +4,8 @@ from bcb import sgs
 
 @st.cache_data
 def get_data():
+    dolar = sgs.get({'Dólar': 10813}, start='2000-01-01')
+    dolar_atual = dolar.iloc[-1].values[0]
     selic = sgs.get({'Selic': 432}, start='2000-01-01')
     selic_atual = selic.iloc[-1].values[0]
     ipca = sgs.get({'IPCA': 13522}, start='2000-01-01')
@@ -12,13 +14,13 @@ def get_data():
     # Calcular juros real
     juros_real = ((1 + selic_atual) / (1 + ipca_atual)) - 1
     
-    return selic, selic_atual, ipca, ipca_atual, juros_real
+    return selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual
 
 def app():
     st.title("Estatística Monetária")
 
     # Obtendo dados com cache
-    selic, selic_atual, ipca, ipca_atual, juros_real = get_data()
+    selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual = get_data()
 
     col1, col2 = st.columns([5, 1])
     with col1:
@@ -153,3 +155,4 @@ def app():
         #bgcolor='rgba(255, 255, 255, 0)',
         bordercolor='yellow'
     )
+    st.plotly_chart(fig_dolar)
