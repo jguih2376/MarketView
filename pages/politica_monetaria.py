@@ -4,15 +4,17 @@ from bcb import sgs
 
 @st.cache_data
 def get_data():
-    dolar = sgs.get({'Dólar': 10813}, start='2000-01-01')
+    dolar = sgs.get({'Dólar': 10813}, start='1999-01-01')
     dolar_atual = dolar.iloc[-1].values[0]
     selic = sgs.get({'Selic': 432}, start='2000-01-01')
     selic_atual = selic.iloc[-1].values[0]
     ipca = sgs.get({'IPCA': 13522}, start='2000-01-01')
     ipca_atual = ipca.iloc[-1].values[0]
-
+    
+    juros_real = ()
     # Calcular juros real
-    juros_real = ((1 + selic_atual) / (1 + ipca_atual)) - 1
+    
+
     
     return selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual
 
@@ -87,11 +89,14 @@ def app():
     with col2:
         st.write('')
         st.write('')
-
+        
+        st.write('')
+        st.write('')
+        
         # Exibindo o iframe com alinhamento ajustado
         iframe_code = """
-        <div style="text-align: center; padding: 10px; font-family: sans-serif;">
-            <span style="font-size: 16px; font-weight: bold; display: block; margin-bottom: 8px; color: white;">Mundo</span>
+        <div style="text-align: center; padding: 1px; font-family: sans-serif;">
+            <span style="font-size: 20px; font-weight: bold; display: block; margin-bottom: 8px; color: white;">Mundo</span>
             <iframe frameborder="0" scrolling="no" height="146" width="108" allowtransparency="true" marginwidth="0" marginheight="0" 
             src="https://sslirates.investing.com/index.php?rows=1&bg1=FFFFFF&bg2=F1F5F8&text_color=333333&enable_border=hide&border_color=0452A1&
             header_bg=ffffff&header_text=FFFFFF&force_lang=12" align="center"></iframe>
@@ -99,7 +104,14 @@ def app():
         """
 
         st.components.v1.html(iframe_code, height=180)
-    
+
+        juros_real = (((1 + selic_atual/100) / (1 + ipca_atual/100)) - 1)*100
+
+        # Exibir o resultado com tamanho do número alterado
+        st.write(f'<h5 style="text-align:center;"color:white;">Juros Real: <span style="font-size:35px; font-weight:normal;">{juros_real:.2f}%</span></h5>', unsafe_allow_html=True)
+        
+
+
     with col1:
         # Criando gráfico interativo do Dólar
         fig_dolar = go.Figure()
@@ -128,7 +140,7 @@ def app():
             title_x=0.4,  # Centraliza melhor o título
             yaxis_title='Valor em R$',
             showlegend=False,
-            plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Fundo mais claro para facilitar leitura
+            plot_bgcolor='rgba(211, 211, 211, 0.10)',  # Fundo mais claro para facilitar leitura
             height=550,
             # margin=dict(l=40, r=40, t=40, b=40)
         )
@@ -140,7 +152,8 @@ def app():
             gridcolor='gray',
             griddash='dot', 
             zeroline=False,  
-            range=[dolar['Dólar'].min() * 0.9, dolar['Dólar'].max() * 1.1]  # Ajuste dinâmico do eixo Y
+            range=[dolar['Dólar'].min() * 0.9, dolar['Dólar'].max() * 1.1],  # Ajuste dinâmico do eixo Y
+            tickformat='.2f'  # Formatação para duas casas decimais
         )
 
         fig_dolar.update_xaxes(showgrid=False, zeroline=False)
