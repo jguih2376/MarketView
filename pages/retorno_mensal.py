@@ -271,8 +271,8 @@ def app():
             if not dados.empty:
                 fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
                 st.plotly_chart(fig)
-                df_valorizacao = calcular_valorizacao(dados)
-                df_valorizacao = df_valorizacao.sort_values(by = 'Período (%)',ascending=False)
+                df_valorizacao = calcular_valorizacao(dados, legenda_dict)
+                df_valorizacao = df_valorizacao.sort_values(by='Período (%)', ascending=False)
                 st.dataframe(df_valorizacao)
             else:
                 st.warning("Nenhum dado disponível para os tickers selecionados.")

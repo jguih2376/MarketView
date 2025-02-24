@@ -29,17 +29,17 @@ def app():
              - Desempenho Relativo
 ''')
     st.write('''
-        - 🏛️**Estatística Monetária**
-             - Selic
-             - IPCA
-             - Dólar
-''')
-    st.write('''
         - 📑**Fundamentos de Ações**
              - Dados Balanço Patrimonial
              - Dados Domonstrativos de Resultados
              - Indicadores Fundamentalista
              - Performace entre ações
+''')
+    st.write('''
+        - 🏛️**Estatística Monetária**
+             - Selic
+             - IPCA
+             - Dólar
 ''')
         
     
