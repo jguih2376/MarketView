@@ -203,7 +203,7 @@ def app():
             xaxis=dict(
                 tickformat='%Y',  # Exibe o ano
                 tickmode='array',  # Define um modo de marcação personalizada
-                tickvals=dados.index[::252],  # Marca um ponto a cada 252 dias (aproximadamente 1 ano de pregão)
+                tickvals=dados.index[::63],  # Marca um ponto a cada 252 dias (aproximadamente 1 ano de pregão)
             ),
             legend_title='Ativos',
             legend_orientation='h',
