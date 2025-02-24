@@ -12,7 +12,7 @@ def get_detalhes_papel(papel):
 
 # Função principal do app
 def app():
-    st.title('Dados Fundamentalistas')
+    st.title('📑 Dados Fundamentalistas')
 
     lista_tickers = ['PETR4', 'VALE3', 'ALOS3', 'ABEV3', 'ASAI3', 'AURE3', 'AMOB3', 'AZUL4', 'AZZA3', 'B3SA3', 'BBSE3', 'BBDC3', 'BBDC4', 
                  'BRAP4', 'BBAS3', 'BRKM5', 'BRAV3', 'BRFS3', 'BPAC11', 'CXSE3', 'CRFB3', 'CCRO3', 'CMIG4', 'COGN3', 

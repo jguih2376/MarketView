@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 def app():
-    st.title('📊 Análise Histórica')
+    st.title('📉 Análise Histórica')
     
     st.subheader('Retorno Mensal')
     # Formulário principal
@@ -130,7 +130,7 @@ def app():
 
 #________________________________________________________________________________________________________________________________________________________
     st.write('---')
-# Título da página
+    # Título da página
     st.subheader("Desempenho Relativo dos Ativos")
 
     # Função para carregar os dados usando yfinance
@@ -151,6 +151,20 @@ def app():
             return (dados / dados.iloc[0] - 1) * 100
         return dados
 
+    def calcular_valorizacao(dados):
+        if dados.empty:
+            return pd.DataFrame()
+        
+        df_var = pd.DataFrame(index=dados.columns)
+        df_var['Último Preço'] = dados.iloc[-1]
+
+        # Retornos considerando períodos específicos
+        df_var['1 Dia (%)'] = ((dados.iloc[-1] / dados.iloc[-2]) - 1) * 100 if len(dados) > 1 else None
+        df_var['1 Semana (%)'] = ((dados.iloc[-1] / dados.iloc[-5]) - 1) * 100 if len(dados) > 5 else None
+        df_var['1 Mês (%)'] = ((dados.iloc[-1] / dados.iloc[-21]) - 1) * 100 if len(dados) > 21 else None
+        df_var['Período Selecionado (%)'] = ((dados.iloc[-1] / dados.iloc[0]) - 1) * 100  # Comparação com o início da amostra
+        
+        return df_var.round(2)
     def criar_grafico(ativos_selecionados, dados, normalizado=True, legenda_dict=None):
         fig = go.Figure()
         for ativo in ativos_selecionados:
@@ -252,6 +266,8 @@ def app():
             if not dados.empty:
                 fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
                 st.plotly_chart(fig)
+                df_valorizacao = calcular_valorizacao(dados)
+                st.dataframe(df_valorizacao)
             else:
                 st.warning("Nenhum dado disponível para os tickers selecionados.")
 

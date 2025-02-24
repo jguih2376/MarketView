@@ -17,7 +17,7 @@ def get_data():
     return selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual
 
 def app():
-    st.title("🏛️Estatística Monetária")
+    st.title("🏛️ Estatística Monetária")
 
     # Obtendo dados com cache
     selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual = get_data()
@@ -109,9 +109,9 @@ def app():
             x=dolar.index, 
             y=dolar['Dólar'], 
             mode='lines',
-            line=dict(color='royalblue', width=1),
+            width=1),
             name="Cotação do Dólar"
-        ))
+        )
 
         # Ponto final destacado
         fig_dolar.add_trace(go.Scatter(
