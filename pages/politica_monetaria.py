@@ -109,7 +109,7 @@ def app():
             x=dolar.index, 
             y=dolar['Dólar'], 
             mode='lines',
-            line=dict(width=1),
+
             name="Cotação do Dólar"
         ))
 
