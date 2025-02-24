@@ -67,9 +67,6 @@ def app():
                 escolha = st.selectbox('', list(acoes_dict.keys()))
                 analisar = st.form_submit_button('Analisar')
                 ticker = acoes_dict[escolha]
-                if analisar:
-                    st.write(f'Você selecionou a ação: {escolha}')
-                    st.write(f'Ticker: {ticker}')
 
         if analisar:
             data_inicial = ('1999-12-01')
@@ -146,17 +143,18 @@ def app():
 
         return pd.DataFrame(dados).dropna()  # Remove valores NaN
 
+    
     def calcular_performance(dados):
         if not dados.empty:
             return (dados / dados.iloc[0] - 1) * 100
         return dados
 
-    def calcular_valorizacao(dados):
+    
+    def calcular_valorizacao(dados, legenda_dict):
         if dados.empty:
             return pd.DataFrame()
         
         df_var = pd.DataFrame(index=dados.columns)
-        df_var['Último Preço'] = dados.iloc[-1]
 
         # Retornos considerando períodos específicos
         df_var['1 Dia (%)'] = ((dados.iloc[-1] / dados.iloc[-2]) - 1) * 100 if len(dados) > 1 else None
@@ -164,7 +162,14 @@ def app():
         df_var['1 Mês (%)'] = ((dados.iloc[-1] / dados.iloc[-21]) - 1) * 100 if len(dados) > 21 else None
         df_var['Período (%)'] = ((dados.iloc[-1] / dados.iloc[0]) - 1) * 100  # Comparação com o início da amostra
         
-        return df_var.round(2)
+        df_var = df_var.round(2)
+
+        # Renomear índices para os nomes dos ativos
+        df_var.index = df_var.index.map(lambda ticker: legenda_dict.get(ticker, ticker))
+
+        return df_var
+    
+
     def criar_grafico(ativos_selecionados, dados, normalizado=True, legenda_dict=None):
         fig = go.Figure()
         for ativo in ativos_selecionados:
@@ -233,17 +238,17 @@ def app():
 
             with col1:
                 if opcao1 == 'Índices':
-                    escolha = st.multiselect('', list(indices.keys()), placeholder='Selecione as Índices')
+                    escolha = st.multiselect('', list(indices.keys()), placeholder='')
                     ticker = [indices[indice] for indice in escolha]
                     legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Commodities':
-                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Selecione as Commodities')
+                    escolha = st.multiselect('', list(commodities.keys()), placeholder='')
                     ticker = [commodities[commodity] for commodity in escolha]
                     legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Ações':
-                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Selecione as Ações')
+                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='')
                     ticker = [acoes_dict[acao] for acao in escolha]
                     legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
