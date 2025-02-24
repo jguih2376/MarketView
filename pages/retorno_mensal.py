@@ -212,6 +212,7 @@ def app():
             margin=dict(r=10)  # Ajusta a margem à direita
         )
         fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
+        fig.update_xaxes(showgrid=True, gridwidth=0.1, gridcolor='lightgray', griddash='dot')
 
         return fig
 
