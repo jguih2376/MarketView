@@ -196,7 +196,7 @@ def app():
                     title='Histórico de Variação Percentual Acumulada dos Preços de Ativos',
                     yaxis=dict(title='Variação Percentual Acumulada (%)', side='left'),
                     legend_title='Ativos',
-                    plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Cor de fundo cinza claro
+                    plot_bgcolor='rgba(211, 211, 211, 0.10)',  # Cor de fundo cinza claro
                     xaxis=dict(showgrid=False),
                     height=600,
                     legend=dict(

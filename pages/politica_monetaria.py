@@ -89,7 +89,8 @@ def app():
     with col2:
         st.write('')
         st.write('')
-        
+        st.write('')
+        st.write('')
         st.write('')
         st.write('')
         
@@ -136,7 +137,7 @@ def app():
 
         # Layout do gráfico
         fig_dolar.update_layout(
-            title='💵 Cotação do Dólar',
+            title='Cotação do Dólar',
             title_x=0.4,  # Centraliza melhor o título
             yaxis_title='Valor em R$',
             showlegend=False,

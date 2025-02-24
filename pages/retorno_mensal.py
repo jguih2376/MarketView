@@ -269,13 +269,15 @@ def app():
         # Carregar os dados reais e mostrar o gráfico quando o botão for pressionado
         if submit_button and ticker:
 
-            dados = carregar_dados(ticker, data_inicio, data_fim)
-            if not dados.empty:
-                fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
-                st.plotly_chart(fig)
-                df_valorizacao = calcular_valorizacao(dados, legenda_dict)
-                df_valorizacao = df_valorizacao.sort_values(by='Período (%)', ascending=False)
-                st.dataframe(df_valorizacao)
-            else:
-                st.warning("Nenhum dado disponível para os tickers selecionados.")
+            col1,col2,col3=st.columns(3)
+            with col2: 
+                dados = carregar_dados(ticker, data_inicio, data_fim)
+                if not dados.empty:
+                    fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
+                    st.plotly_chart(fig)
+                    df_valorizacao = calcular_valorizacao(dados, legenda_dict)
+                    df_valorizacao = df_valorizacao.sort_values(by='Período (%)', ascending=False)
+                    st.dataframe(df_valorizacao)
+                else:
+                    st.warning("Nenhum dado disponível para os tickers selecionados.")
 

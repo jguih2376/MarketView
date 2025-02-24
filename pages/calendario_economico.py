@@ -27,4 +27,4 @@ def app():
     """
     
     # Renderizando o HTML no Streamlit
-    components.html(iframe_code, height=750)
+    components.html(iframe_code, height=700)
