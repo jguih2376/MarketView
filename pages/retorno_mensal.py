@@ -208,12 +208,12 @@ def app():
             ),
             legend_title='Ativos',
             legend_orientation='h',
-            plot_bgcolor='rgba(211, 211, 211, 0.15)',
+            plot_bgcolor='rgba(211, 211, 211, 0.5)',
             height=600,
             margin=dict(r=10)  # Ajusta a margem à direita
         )
-        fig.update_xaxes(showgrid=True, gridwidth=0.1, gridcolor='lightgray', griddash='dot')
-        fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='lightgray', griddash='dot')
+        fig.update_xaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
+        fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
 
         return fig
 
