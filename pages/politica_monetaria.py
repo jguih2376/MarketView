@@ -17,7 +17,7 @@ def get_data():
     return selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual
 
 def app():
-    st.title("Estatística Monetária")
+    st.title("🏛️Estatística Monetária")
 
     # Obtendo dados com cache
     selic, selic_atual, ipca, ipca_atual, juros_real, dolar, dolar_atual = get_data()

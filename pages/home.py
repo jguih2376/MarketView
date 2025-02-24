@@ -14,27 +14,28 @@ def app():
         O **MarketView** é a sua plataforma para acompanhar indicadores financeiros e econômicos.  
         Utilize o menu lateral para explorar as diversas páginas e funcionalidades do sistema, como:''')
     st.write('''
-        - **Calendário Econômico** - Acompanhe eventos importantes e datas chave para o mercado financeiro.''')
+        - 📅**Calendário Econômico** - Acompanhe eventos importantes e datas chave para o mercado financeiro.''')
              
     st.write('''
-        - **Panorama do Mercado** - Obtenha uma visão geral dos principais ativos. 
+        - 🌎**Panorama do Mercado** - Obtenha uma visão geral dos principais ativos. 
              - Ações Brasileira, 
-             - Índices de bolsa mundial
+             - Índices de Bolsa Mundial
              - Moedas
              - Commodities.
 ''')             
     st.write('''
-        - **Análise Histórica**
+        - 📉**Análise Histórica**
              - Retorno Mensal
              - Desempenho Relativo
 ''')
     st.write('''
-        - **Política Monetária**
+        - 🏛️**Estatística Monetária**
              - Selic
              - IPCA
+             - Dólar
 ''')
     st.write('''
-        - **Fundamentos de Ações**
+        - 📑**Fundamentos de Ações**
              - Dados Balanço Patrimonial
              - Dados Domonstrativos de Resultados
              - Indicadores Fundamentalista

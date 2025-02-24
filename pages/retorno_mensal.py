@@ -180,7 +180,6 @@ def app():
         # Ajustando a data do eixo X para intervalo de 1 ano
         fig.update_layout(
             title=f"{'Desempenho Relativo (%)' if normalizado else 'Preço dos Ativos'}",
-            xaxis_title='Data',
             yaxis_title='Performance (%)' if normalizado else 'Preço',
             xaxis=dict(
                 tickformat='%Y',  # Exibe o ano
