@@ -25,7 +25,7 @@ if "page" not in st.session_state:
 st.sidebar.title("Navegação")
 pagina = st.sidebar.radio(
     "Escolha uma página", 
-    ["Home", "Calendário Econômico", "Panorama do Mercado", "Estatística Monetária", "Análise Histórica", "Fundamentos"]
+    ["Home", "Calendário Econômico", "Panorama do Mercado", "Análise Histórica", "Fundamentos", "Estatística Monetária"]
 )
 
 # Redirecionar para as páginas conforme a escolha do usuário
@@ -35,10 +35,10 @@ elif pagina == "Calendário Econômico":
     calendario_economico.app()
 elif pagina == "Panorama do Mercado":
     panorama_do_mercado.app()
-elif pagina == "Estatística Monetária":
-    politica_monetaria.app()
 elif pagina == "Análise Histórica":
     retorno_mensal.app()
 elif pagina == "Fundamentos":
     fundamentos.app()
+elif pagina == "Estatística Monetária":
+    politica_monetaria.app()
 
