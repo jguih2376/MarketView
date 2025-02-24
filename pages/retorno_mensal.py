@@ -204,17 +204,14 @@ def app():
                 tickformat='%b %Y',  # Exibe o ano
                 tickmode='array',  # Define um modo de marcação personalizada
                 tickvals=dados.index[::63],  # Marca um ponto a cada 252 dias (aproximadamente 1 ano de pregão)
-                tickangle=-45,  # Rotaciona os rótulos para melhor legibilidade
             ),
-            yaxis=dict(zerolinecolor='white')
             legend_title='Ativos',
             legend_orientation='h',
             plot_bgcolor='rgba(211, 211, 211, 0.15)',
             height=600,
             margin=dict(r=10)  # Ajusta a margem à direita
         )
-        fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='lightgray', griddash='dot')
-        fig.update_xaxes(showgrid=True, gridwidth=0.1, gridcolor='lightgray', griddash='dot')
+        fig.update_yaxes(showgrid=True, gridwidth=0.1, gridcolor='gray', griddash='dot')
 
         return fig
 
