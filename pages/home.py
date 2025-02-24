@@ -1,10 +1,7 @@
 import streamlit as st
 
 def app():
-    st.title("Home")
-
-
-    # Título da página
+     # Título da página
     st.title("📊 Bem-vindo ao MarketView!")
 
     # Descrição do app
@@ -39,7 +36,9 @@ def app():
         - 🏛️**Estatística Monetária**
              - Selic
              - IPCA
+             - Juros Real
              - Dólar
+             
 ''')
         
     

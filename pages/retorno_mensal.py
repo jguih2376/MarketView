@@ -276,7 +276,7 @@ def app():
                 st.plotly_chart(fig)
                 df_valorizacao = calcular_valorizacao(dados, legenda_dict)
                 df_valorizacao = df_valorizacao.sort_values(by='Período (%)', ascending=False)
-                col1,col2,col3=st.columns([1,4,1])   
+                col1,col2=st.columns([1,4])   
                 with col2:     
                     st.dataframe(df_valorizacao)
             else:
