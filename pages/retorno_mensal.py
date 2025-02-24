@@ -201,7 +201,7 @@ def app():
             title=f"{'Desempenho Relativo (%)' if normalizado else 'Preço dos Ativos'}",
             yaxis_title='Performance (%)' if normalizado else 'Preço',
             xaxis=dict(
-                tickformat='%Y',  # Exibe o ano
+                tickformat='%M%Y',  # Exibe o ano
                 tickmode='array',  # Define um modo de marcação personalizada
                 tickvals=dados.index[::63],  # Marca um ponto a cada 252 dias (aproximadamente 1 ano de pregão)
             ),
