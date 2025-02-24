@@ -208,7 +208,7 @@ def app():
             ),
             legend_title='Ativos',
             legend_orientation='h',
-            plot_bgcolor='rgba(211, 211, 211, 0.5)',
+            plot_bgcolor='rgba(211, 211, 211, 0.10)',
             height=600,
             margin=dict(r=10)  # Ajusta a margem à direita
         )
