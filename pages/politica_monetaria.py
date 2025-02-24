@@ -109,7 +109,7 @@ def app():
             x=dolar.index, 
             y=dolar['Dólar'], 
             mode='lines',
-            line=dict(color='royalblue', width=1),
+            line=dict(width=1),
             name="Cotação do Dólar"
         ))
 
@@ -118,7 +118,7 @@ def app():
             x=[dolar.index[-1]], 
             y=[dolar_atual], 
             mode='markers', 
-            marker=dict(color='red', size=8),
+            marker=dict(color='red', size=5),
             name="Última cotação"
         ))
 
@@ -129,6 +129,7 @@ def app():
             yaxis_title='Valor em R$',
             showlegend=False,
             plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Fundo mais claro para facilitar leitura
+            height=700,
            # margin=dict(l=40, r=40, t=40, b=40)
         )
 
