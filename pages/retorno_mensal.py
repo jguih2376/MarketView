@@ -24,7 +24,7 @@ def app():
                         'Nikkei225':'^N225',
                         'Merval':'^MERV'}
                 
-                escolha = st.selectbox('', list(indices.keys()))
+                escolha = st.selectbox('', list(indices.keys()),index=0)
                 analisar = st.form_submit_button('Analisar')
                 ticker = indices[escolha]
 
@@ -47,7 +47,7 @@ def app():
                             'Cacau':'CC=F',
                             'Café':'KC=F'}    
                 
-                escolha = st.selectbox('Selecione o Ativo:', list(commodities.keys()))
+                escolha = st.selectbox('', list(commodities.keys()))
                 analisar = st.form_submit_button('Analisar')
                 ticker = commodities[escolha]
 
@@ -64,7 +64,7 @@ def app():
                 # Criando um dicionário com chave como o nome da ação e valor como o nome da ação com '.SA'
                 acoes_dict = {acao: acao + '.SA' for acao in acoes}
 
-                escolha = st.selectbox('Selecione o Ativo:', list(acoes_dict.keys()))
+                escolha = st.selectbox('', list(acoes_dict.keys()))
                 analisar = st.form_submit_button('Analisar')
                 ticker = acoes_dict[escolha]
                 if analisar:
@@ -162,7 +162,7 @@ def app():
         df_var['1 Dia (%)'] = ((dados.iloc[-1] / dados.iloc[-2]) - 1) * 100 if len(dados) > 1 else None
         df_var['1 Semana (%)'] = ((dados.iloc[-1] / dados.iloc[-5]) - 1) * 100 if len(dados) > 5 else None
         df_var['1 Mês (%)'] = ((dados.iloc[-1] / dados.iloc[-21]) - 1) * 100 if len(dados) > 21 else None
-        df_var['Período Selecionado (%)'] = ((dados.iloc[-1] / dados.iloc[0]) - 1) * 100  # Comparação com o início da amostra
+        df_var['Período (%)'] = ((dados.iloc[-1] / dados.iloc[0]) - 1) * 100  # Comparação com o início da amostra
         
         return df_var.round(2)
     def criar_grafico(ativos_selecionados, dados, normalizado=True, legenda_dict=None):
@@ -233,17 +233,17 @@ def app():
 
             with col1:
                 if opcao1 == 'Índices':
-                    escolha = st.multiselect('', list(indices.keys()), placeholder='Índices')
+                    escolha = st.multiselect('', list(indices.keys()), placeholder='Selecione as Índices')
                     ticker = [indices[indice] for indice in escolha]
                     legenda_dict = {v: k for k, v in indices.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Commodities':
-                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Commodities')
+                    escolha = st.multiselect('', list(commodities.keys()), placeholder='Selecione as Commodities')
                     ticker = [commodities[commodity] for commodity in escolha]
                     legenda_dict = {v: k for k, v in commodities.items()}  # Inverte o dicionário para a legenda
 
                 elif opcao1 == 'Ações':
-                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Ações')
+                    escolha = st.multiselect('', list(acoes_dict.keys()), placeholder='Selecione as Ações')
                     ticker = [acoes_dict[acao] for acao in escolha]
                     legenda_dict = {v: k for k, v in acoes_dict.items()}  # Inverte o dicionário para a legenda
 
@@ -267,6 +267,7 @@ def app():
                 fig = criar_grafico(ticker, dados, normalizado, legenda_dict)
                 st.plotly_chart(fig)
                 df_valorizacao = calcular_valorizacao(dados)
+                df_valorizacao = df_valorizacao.sort_values(by = 'Período (%)',ascending=False)
                 st.dataframe(df_valorizacao)
             else:
                 st.warning("Nenhum dado disponível para os tickers selecionados.")
