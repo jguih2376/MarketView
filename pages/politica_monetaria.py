@@ -100,61 +100,61 @@ def app():
 
         st.components.v1.html(iframe_code, height=180)
     
-    with col1:
-        # Criando gráfico interativo do Dólar
-        fig_dolar = go.Figure()
 
-        # Linha do dólar ao longo do tempo
-        fig_dolar.add_trace(go.Scatter(
-            x=dolar.index, 
-            y=dolar['Dólar'], 
-            mode='lines',
-            line=dict(width=1),
-            name="Cotação do Dólar"
-        ))
+    # Criando gráfico interativo do Dólar
+    fig_dolar = go.Figure()
 
-        # Ponto final destacado
-        fig_dolar.add_trace(go.Scatter(
-            x=[dolar.index[-1]], 
-            y=[dolar_atual], 
-            mode='markers', 
-            marker=dict(color='red', size=5),
-            name="Última cotação"
-        ))
+    # Linha do dólar ao longo do tempo
+    fig_dolar.add_trace(go.Scatter(
+        x=dolar.index, 
+        y=dolar['Dólar'], 
+        mode='lines',
+        line=dict(width=1),
+        name="Cotação do Dólar"
+    ))
 
-        # Layout do gráfico
-        fig_dolar.update_layout(
-            title='💵 Cotação do Dólar',
-            title_x=0.4,  # Centraliza melhor o título
-            yaxis_title='Valor em R$',
-            showlegend=False,
-            plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Fundo mais claro para facilitar leitura
-            height=650,
-           # margin=dict(l=40, r=40, t=40, b=40)
-        )
+    # Ponto final destacado
+    fig_dolar.add_trace(go.Scatter(
+        x=[dolar.index[-1]], 
+        y=[dolar_atual], 
+        mode='markers', 
+        marker=dict(color='red', size=5),
+        name="Última cotação"
+    ))
 
-        # Ajustes nos eixos
-        fig_dolar.update_yaxes(
-            showgrid=True, 
-            gridwidth=0.1, 
-            gridcolor='gray',
-            griddash='dot', 
-            zeroline=False,  
-            range=[dolar['Dólar'].min() * 0.9, dolar['Dólar'].max() * 1.1]  # Ajuste dinâmico do eixo Y
-        )
+    # Layout do gráfico
+    fig_dolar.update_layout(
+        title='💵 Cotação do Dólar',
+        title_x=0.4,  # Centraliza melhor o título
+        yaxis_title='Valor em R$',
+        showlegend=False,
+        plot_bgcolor='rgba(211, 211, 211, 0.15)',  # Fundo mais claro para facilitar leitura
+        height=600,
+        # margin=dict(l=40, r=40, t=40, b=40)
+    )
 
-        fig_dolar.update_xaxes(showgrid=False, zeroline=False)
+    # Ajustes nos eixos
+    fig_dolar.update_yaxes(
+        showgrid=True, 
+        gridwidth=0.1, 
+        gridcolor='gray',
+        griddash='dot', 
+        zeroline=False,  
+        range=[dolar['Dólar'].min() * 0.9, dolar['Dólar'].max() * 1.1]  # Ajuste dinâmico do eixo Y
+    )
 
-        # Adicionando anotação para destacar o valor atual
-        fig_dolar.add_annotation(
-            x=dolar.index[-1], 
-            y=dolar_atual,
-            text=f'R${dolar_atual:.2f}',
-            showarrow=True,
-            arrowhead=0,
-            ax=20,
-            ay=-40,
-            #bgcolor='rgba(255, 255, 255, 0)',
-            bordercolor='yellow'
-        )
-        st.plotly_chart(fig_dolar)
+    fig_dolar.update_xaxes(showgrid=False, zeroline=False)
+
+    # Adicionando anotação para destacar o valor atual
+    fig_dolar.add_annotation(
+        x=dolar.index[-1], 
+        y=dolar_atual,
+        text=f'R${dolar_atual:.2f}',
+        showarrow=True,
+        arrowhead=0,
+        ax=20,
+        ay=-40,
+        #bgcolor='rgba(255, 255, 255, 0)',
+        bordercolor='yellow'
+    )
+    st.plotly_chart(fig_dolar)
